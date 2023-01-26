@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'order',
+    'member',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,21 @@ SILENCED_SYSTEM_CHECKS = ['urls.W002']
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
 }
+
+import datetime
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("JWT", ),
+}
+AUTH_USER_MODEL = "member.Member"
+AUTHENTICATION_BACKENDS = [
+    "member.auth.MemberAuth"
+]
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원가입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+        function signup() {
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/api/member',
+                data: {
+                    username: $("#username").val(),
+                    password: $("#password").val(),
+                    tel: $("#tel").val(),
+                },
+                success: (result) => {
+                    alert("회원가입 완료");
+                },
+                error: (result) => {
+                    const ret = result.responseJSON;
+                    let errorMsg = '';
+                    
+                    if (ret.password) {
+                        errorMsg += '비밀번호 오류';
+                    }
+                    
+                    if (ret.username) {
+                        errorMsg += '\n아이디 오류';
+                    }
+
+                    if (errorMsg) {
+                        alert(errorMsg);
+                    }
+                }
+            })
+        }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="form-group mb-3">
+            <label for="username">아이디</label>
+            <input type="text" class="form-control" id="username" name="username" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="password">비밀번호</label>
+            <input type="password" class="form-control" id="password" name="password" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="tel">연락처</label>
+            <input type="tel" class="form-control" id="tel" name="tel" />
+        </div>
+        <div class="text-right">
+            <button type="button" class="btn btn-primary" onclick="signup()">회원가입</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  </body>
+</html>
