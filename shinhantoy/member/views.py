@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.hashers import check_password, make_password
 
@@ -23,8 +24,10 @@ class MemberRegisterView(
 
 
 class MemberChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def put(self, request, *args, **kwargs):
-        username = request.data.get('username')
+        # 로그인한 사용자만 들어올수 있는 곳.
         current = request.data.get('current')
         password1 = request.data.get('password1')
         password2 = request.data.get('password2')
@@ -34,12 +37,7 @@ class MemberChangePasswordView(APIView):
                 'detail': 'Wrong new passwords',
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not Member.objects.filter(username=username).exists():
-            return Response({
-                'detail': 'No account',
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        member = Member.objects.get(username=username)
+        member = request.user
         if not check_password(current, member.password):
             return Response({
                 'detail': 'Wrong password',
