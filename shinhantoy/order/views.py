@@ -1,4 +1,5 @@
 from rest_framework import generics, mixins
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import OrderSerializer, CommentSerializer, CommentCreateSerializer
 from .models import Order, Comment
@@ -52,6 +53,7 @@ class CommentCreateView(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentCreateSerializer
 
     def post(self, request, *args, **kwargs):
